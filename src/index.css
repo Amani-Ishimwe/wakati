@@ -652,7 +652,7 @@ body::before {
   padding: 8px 4px;
   border-radius: 8px;
   font-size: 11px;
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-weight: bold;
   cursor: pointer;
   box-shadow: 
@@ -761,7 +761,7 @@ body::before {
   background: transparent;
   border: none;
   outline: none;
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 17px;
   font-weight: bold;
   color: #1c1c1e;
@@ -770,7 +770,7 @@ body::before {
 }
 
 .lcd-colon {
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 16px;
   font-weight: bold;
   color: #1c1c1e;

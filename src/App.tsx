@@ -596,12 +596,7 @@ export default function App() {
         </button>
       )}
 
-      {/* Audio Context Unlock Prompt */}
-      {audioEnabled && status === 'idle' && (
-        <div className="mt-4 text-center text-[10px] text-zinc-600 select-none">
-          Click anywhere or press SPACE to unlock tick & alarm sounds
-        </div>
-      )}
+
     </div>
   );
 }
