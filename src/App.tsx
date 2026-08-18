@@ -271,6 +271,21 @@ export default function App() {
         <div className="plunger-label plunger-label-left">START / STOP</div>
         <div className="plunger-label plunger-label-right">RESET</div>
 
+        {/* Brand Logo in top center of casing */}
+        <div 
+          style={{
+            position: 'absolute',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            top: '10px',
+            pointerEvents: 'none',
+            zIndex: 5,
+            userSelect: 'none',
+          }}
+        >
+          <img src="/logo.svg" style={{ height: '20px', opacity: 0.8, objectFit: 'contain' }} alt="Brand Logo" />
+        </div>
+
         {/* Alarm Bell and striking mechanism */}
         <div className={`alarm-bell-assembly ${status === 'overtime' ? 'ringing' : ''}`}>
           <div className="bell-gong"></div>

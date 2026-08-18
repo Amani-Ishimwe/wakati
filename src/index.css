@@ -27,7 +27,10 @@
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  background-color: var(--body-bg);
+  background-image: url('/lumic.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   color: #2c2c2e;
   min-height: 100vh;
   display: flex;
@@ -39,6 +42,7 @@ body {
 
 /* Background texture for the light desk surface */
 body::before {
+  display: none;
   content: '';
   position: absolute;
   inset: 0;
