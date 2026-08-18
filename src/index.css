@@ -767,6 +767,26 @@ body::before {
   color: #1c1c1e;
   text-align: center;
   box-sizing: border-box;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.lcd-input-field:focus {
+  background-color: rgba(0, 122, 255, 0.08); /* Subtle premium tint highlight */
+  color: #007aff; /* Apple-style blue tint to signal editing mode */
+  border-radius: 4px;
+}
+
+.lcd-input-field::selection {
+  background-color: rgba(0, 122, 255, 0.25);
+  color: #007aff;
+}
+
+.debossed-lcd-window:focus-within {
+  border-color: #007aff;
+  box-shadow: 
+    inset 0 1.5px 3px rgba(0, 0, 0, 0.08),
+    0 0 4px rgba(0, 122, 255, 0.4);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .lcd-colon {
@@ -999,6 +1019,7 @@ body::before {
 }
 
 .fullscreen-stage-mode {
+  position: relative;
   background-image: url('/lumic.jpeg') !important;
   background-size: 100% 100% !important;
   background-position: center !important;
@@ -1011,6 +1032,46 @@ body::before {
   padding: 0;
   margin: 0;
   overflow: hidden;
+}
+
+.stage-mode-exit-btn {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .stage-mode-exit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(to bottom, #ffffff 0%, #eaeaea 100%);
+    border: 1px solid #c7c7cc;
+    color: #48484a;
+    box-shadow: 
+      0 4px 10px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 #ffffff;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.1s ease;
+  }
+
+  .stage-mode-exit-btn:hover {
+    color: #1c1c1e;
+    border-color: #acacac;
+  }
+
+  .stage-mode-exit-btn:active {
+    transform: scale(0.95);
+    background: linear-gradient(to bottom, #dcdcdc 0%, #c7c7cc 100%);
+    box-shadow: 
+      inset 0 2px 3px rgba(0, 0, 0, 0.18),
+      0 1px 1px rgba(255, 255, 255, 0.8);
+  }
 }
 
 .fullscreen-stage-mode .deck-timer-casing {

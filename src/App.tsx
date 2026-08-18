@@ -36,6 +36,9 @@ export default function App() {
   const [customHours, setCustomHours] = useState('');
   const [customMinutes, setCustomMinutes] = useState('');
   const [customSeconds, setCustomSeconds] = useState('');
+  const [isHoursFocused, setIsHoursFocused] = useState(false);
+  const [isMinsFocused, setIsMinsFocused] = useState(false);
+  const [isSecsFocused, setIsSecsFocused] = useState(false);
   
   // Parallax glass shifting state
   const [parallax, setParallax] = useState({ x: 0, y: 0 });
@@ -86,10 +89,10 @@ export default function App() {
     const hrs = Math.floor(duration / 3600);
     const mins = Math.floor((duration % 3600) / 60);
     const secs = duration % 60;
-    setCustomHours(hrs.toString().padStart(2, '0'));
-    setCustomMinutes(mins.toString().padStart(2, '0'));
-    setCustomSeconds(secs.toString().padStart(2, '0'));
-  }, [duration]);
+    if (!isHoursFocused) setCustomHours(hrs.toString().padStart(2, '0'));
+    if (!isMinsFocused) setCustomMinutes(mins.toString().padStart(2, '0'));
+    if (!isSecsFocused) setCustomSeconds(secs.toString().padStart(2, '0'));
+  }, [duration, isHoursFocused, isMinsFocused, isSecsFocused]);
 
   useEffect(() => {
     localStorage.setItem('timer_overtime_enabled', overtimeEnabled.toString());
@@ -242,6 +245,22 @@ export default function App() {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
+      {isFullscreen && (
+        <button
+          type="button"
+          onClick={() => {
+            playClick();
+            toggleFullscreen();
+          }}
+          className="stage-mode-exit-btn"
+          aria-label="Exit Stage Mode"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+      )}
       {/* Outer casing */}
       <div 
         ref={casingRef}
@@ -480,7 +499,14 @@ export default function App() {
                     maxLength={2}
                     value={customHours}
                     onChange={handleCustomHoursChange}
-                    onBlur={handleCustomInputBlur}
+                    onFocus={(e) => {
+                      setIsHoursFocused(true);
+                      e.target.select();
+                    }}
+                    onBlur={() => {
+                      setIsHoursFocused(false);
+                      handleCustomInputBlur();
+                    }}
                     className="lcd-input-field hours"
                     placeholder="00"
                     aria-label="Custom duration hours input"
@@ -493,7 +519,14 @@ export default function App() {
                     maxLength={2}
                     value={customMinutes}
                     onChange={handleCustomMinutesChange}
-                    onBlur={handleCustomInputBlur}
+                    onFocus={(e) => {
+                      setIsMinsFocused(true);
+                      e.target.select();
+                    }}
+                    onBlur={() => {
+                      setIsMinsFocused(false);
+                      handleCustomInputBlur();
+                    }}
                     className="lcd-input-field mins"
                     placeholder="00"
                     aria-label="Custom duration minutes input"
@@ -506,7 +539,14 @@ export default function App() {
                     maxLength={2}
                     value={customSeconds}
                     onChange={handleCustomSecondsChange}
-                    onBlur={handleCustomInputBlur}
+                    onFocus={(e) => {
+                      setIsSecsFocused(true);
+                      e.target.select();
+                    }}
+                    onBlur={() => {
+                      setIsSecsFocused(false);
+                      handleCustomInputBlur();
+                    }}
                     className="lcd-input-field secs"
                     placeholder="00"
                     aria-label="Custom duration seconds input"
