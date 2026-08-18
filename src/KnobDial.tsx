@@ -193,8 +193,8 @@ export const KnobDial: React.FC<KnobDialProps> = ({
         onPointerUp={handlePointerUp}
         className="dial-stationary-face relative flex items-center justify-center cursor-grab active:cursor-grabbing rounded-full"
         style={{
-          width: '240px',
-          height: '240px',
+          width: 'var(--dial-size, 240px)',
+          height: 'var(--dial-size, 240px)',
           background: 'radial-gradient(circle, #ffffff 60%, #f4f4f7 100%)',
           border: '1.5px solid #d1d1d6',
           boxShadow: 'inset 0 2px 5px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.05)',

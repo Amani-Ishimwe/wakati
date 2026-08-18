@@ -1072,23 +1072,57 @@ body::before {
       inset 0 2px 3px rgba(0, 0, 0, 0.18),
       0 1px 1px rgba(255, 255, 255, 0.8);
   }
+
+  /* Tablet Stage Mode scaling */
+  .fullscreen-stage-mode .deck-timer-casing {
+    max-width: 760px;
+    max-height: 400px;
+    padding: 24px;
+    gap: 20px;
+  }
+  
+  .fullscreen-stage-mode .casing-left-column {
+    width: 280px;
+    --dial-size: 260px;
+  }
+  
+  .fullscreen-stage-mode .vfd-screen-glass {
+    height: 100px;
+  }
+  
+  .fullscreen-stage-mode .vfd-text-container,
+  .fullscreen-stage-mode .vfd-bg-shadow {
+    font-size: 64px;
+    letter-spacing: 2px;
+  }
+  
+  .fullscreen-stage-mode .panel-btn-tactile {
+    height: 48px;
+    font-size: 15px;
+  }
 }
 
 .fullscreen-stage-mode .deck-timer-casing {
-  transform: none !important; /* Disable scale transform to avoid clipping */
-  width: 95vw;
-  max-width: 650px;
+  transform: none; /* Allow transform keyframes to animate during urgent/overtime */
+  width: 94vw;
+  max-width: 1400px; /* Increased from 1200px to look big on projector */
   height: 90vh;
-  max-height: 380px; /* reduced height! */
-  padding: 24px;
-  border-radius: 24px;
+  max-height: 700px; /* Increased from 600px */
+  padding: 56px; /* Increased from 48px */
+  border-radius: 44px;
   display: flex;
   flex-direction: row !important; /* side-by-side console! */
   align-items: center;
   justify-content: space-around;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 45px 100px rgba(0, 0, 0, 0.28);
   background-color: #ffffff;
   border-color: #e5e5ea;
+  gap: 56px;
+}
+
+.fullscreen-stage-mode .casing-left-column {
+  width: 520px; /* Increased from 440px */
+  --dial-size: 500px; /* Giant analog watch dial (420px -> 500px) */
 }
 
 /* Hide non-essential controls during fullscreen stage presentation to save vertical space */
@@ -1104,37 +1138,37 @@ body::before {
 
 /* Make VFD screen much larger in Stage Mode */
 .fullscreen-stage-mode .vfd-screen-bezel {
-  margin-bottom: 12px;
-  padding: 10px;
+  margin-bottom: 15px;
+  padding: 15px;
   width: 100%;
 }
 
 .fullscreen-stage-mode .vfd-screen-glass {
-  height: 90px; /* Make VFD display taller */
+  height: 180px; /* Make VFD display taller, increased from 150px */
 }
 
 .fullscreen-stage-mode .vfd-text-container {
-  font-size: 58px; /* Double digit size for high glanceability */
-  letter-spacing: 2px;
+  font-size: 116px; /* Giant numbers visible from far away, increased from 96px */
+  letter-spacing: 5px;
 }
 
 .fullscreen-stage-mode .vfd-bg-shadow {
-  font-size: 58px;
-  letter-spacing: 2px;
+  font-size: 116px;
+  letter-spacing: 5px;
 }
 
 .fullscreen-stage-mode .overtime-indicator {
-  font-size: 32px;
+  font-size: 64px;
 }
 
 .fullscreen-stage-mode .panel-controls-row {
-  margin-top: 10px;
+  margin-top: 24px;
 }
 
 .fullscreen-stage-mode .panel-btn-tactile {
-  height: 48px;
-  font-size: 15px;
-  border-radius: 8px;
+  height: 80px; /* Increased from 68px */
+  font-size: 26px; /* Increased from 22px */
+  border-radius: 14px;
 }
 
 /* --- DUST/GRAIN NOISE FILTER --- */
@@ -1289,6 +1323,7 @@ input:focus-visible {
 
   .fullscreen-stage-mode .casing-left-column {
     width: 200px;
+    --dial-size: 190px;
   }
 
   .fullscreen-stage-mode .vfd-text-container,

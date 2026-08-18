@@ -211,23 +211,29 @@ export default function App() {
   };
 
   const handleCustomMinutesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value.replace(/\D/g, '').slice(0, 2); // Max 2 digits
+    let val = e.target.value.replace(/\D/g, '').slice(0, 2); // Max 2 digits
+    let mins = val ? parseInt(val, 10) : 0;
+    if (mins > 59) {
+      mins = 59;
+      val = '59';
+    }
     setCustomMinutes(val);
     const hrs = customHours ? parseInt(customHours, 10) : 0;
-    const mins = val ? parseInt(val, 10) : 0;
-    const clampedMins = Math.min(59, mins); // clamp minutes to 0-59
     const secs = customSeconds ? parseInt(customSeconds, 10) : 0;
-    setDuration(hrs * 3600 + clampedMins * 60 + secs);
+    setDuration(hrs * 3600 + mins * 60 + secs);
   };
 
   const handleCustomSecondsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value.replace(/\D/g, '').slice(0, 2); // Max 2 digits
+    let val = e.target.value.replace(/\D/g, '').slice(0, 2); // Max 2 digits
+    let secs = val ? parseInt(val, 10) : 0;
+    if (secs > 59) {
+      secs = 59;
+      val = '59';
+    }
     setCustomSeconds(val);
     const hrs = customHours ? parseInt(customHours, 10) : 0;
     const mins = customMinutes ? parseInt(customMinutes, 10) : 0;
-    const secs = val ? parseInt(val, 10) : 0;
-    const clampedSecs = Math.min(59, secs); // clamp seconds to 0-59
-    setDuration(hrs * 3600 + mins * 60 + clampedSecs);
+    setDuration(hrs * 3600 + mins * 60 + secs);
   };
 
   const handleCustomInputBlur = () => {
