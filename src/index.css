@@ -1,0 +1,991 @@
+/* Google Fonts import */
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Color Palette (Grayscale & Monochromatic only - WHITE DOMINANT) */
+  --chassis-bg: #f3f3f6; /* Premium soft off-white/light gray */
+  --chassis-border: #d1d1d6; /* Light gray bevel division line */
+  --metal-highlight: #ffffff;
+  --metal-shadow: #c7c7cc;
+  
+  --dial-bg-light: #ffffff;
+  --dial-bg-dark: #d8d8dc;
+  
+  --vfd-glow: rgba(0, 0, 0, 0.05); /* Soft LCD text shadow */
+  --vfd-text: #1c1c1e; /* Deep rich charcoal gray active digits */
+  --vfd-bg: #f8f9fc; /* High contrast light grey-white glass background for LCD look */
+  --vfd-dim: #e5e5ea; /* Faint "88:88" segments behind active display (light gray) */
+  
+  --body-bg: #e5e5ea; /* Off-white/light gray desk surface */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--body-bg);
+  color: #2c2c2e;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Background texture for the light desk surface */
+body::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.75) 0%, rgba(210, 210, 215, 0.95) 100%),
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.006) 0px, rgba(0, 0, 0, 0.006) 1px, transparent 1px, transparent 4px),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.006) 0px, rgba(0, 0, 0, 0.006) 1px, transparent 1px, transparent 4px);
+  pointer-events: none;
+}
+
+/* Base layout */
+#root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 20px;
+}
+
+/* --- THE MECHANICAL DECK TIMER CASE --- */
+.deck-timer-casing {
+  background-color: var(--chassis-bg);
+  border: 1px solid var(--chassis-border);
+  border-radius: 40px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 45px 35px 35px 35px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 
+    /* Soft physical shadow on the desk (lighter for light theme) */
+    0 25px 60px -15px rgba(0, 0, 0, 0.25),
+    0 10px 20px -10px rgba(0, 0, 0, 0.15),
+    /* Soft ambient shadow */
+    0 0 80px 2px rgba(0, 0, 0, 0.06),
+    /* Outer highlight edge (bright white top bevel) */
+    inset 0 3px 4px rgba(255, 255, 255, 0.95),
+    /* Bottom inner shadow */
+    inset 0 -4px 10px rgba(0, 0, 0, 0.08);
+  /* Metallic bead-blasted surface shading */
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.9), transparent 70%),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 0%, rgba(0, 0, 0, 0.04) 100%);
+  transition: transform 0.1s ease;
+}
+
+/* Chamfered/Beveled metal edge frame */
+.deck-timer-casing::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 36px;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 
+    inset 0 2px 4px rgba(255, 255, 255, 0.8),
+    0 3px 8px rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+}
+
+/* Screw heads at 4 corners (Silver metallic) */
+.casing-screw {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle at 30% 30%, #ffffff, #d8d8dc 50%, #999 100%);
+  border-radius: 50%;
+  border: 1px solid #aeaeae;
+  box-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.15),
+    inset 0 1px 1px rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.casing-screw::before {
+  content: '';
+  width: 80%;
+  height: 1.5px;
+  background-color: #48484a;
+  box-shadow: 0 0.5px 0.5px rgba(255, 255, 255, 0.5);
+}
+
+/* Rotate screw threads randomly for authenticity */
+.casing-screw.top-left { top: 22px; left: 22px; transform: rotate(25deg); }
+.casing-screw.top-right { top: 22px; right: 22px; transform: rotate(115deg); }
+.casing-screw.bottom-left { bottom: 22px; left: 22px; transform: rotate(195deg); }
+.casing-screw.bottom-right { bottom: 22px; right: 22px; transform: rotate(62deg); }
+
+/* --- PHYSICAL PLUNGERS (Silver-plated) --- */
+.timer-plungers-container {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  top: -46px;
+  left: 0;
+  right: 0;
+  height: 50px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.metal-plunger-trigger {
+  position: relative;
+  cursor: pointer;
+  pointer-events: auto;
+  outline: none;
+  border: none;
+  background: none;
+}
+
+/* Shaft collar (welded onto case) */
+.plunger-collar {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 16px;
+  width: 32px;
+  background: linear-gradient(to right, #8e8e93 0%, #e5e5ea 30%, #ffffff 50%, #aeaeae 70%, #555 100%);
+  border-radius: 4px 4px 0 0;
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.plunger-collar::before {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: -2px;
+  right: -2px;
+  height: 4px;
+  background-color: #d1d1d6;
+  border-radius: 1px;
+}
+
+/* Plunger shaft */
+.plunger-shaft {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 25px;
+  background: linear-gradient(to right, #888 0%, #e5e5ea 30%, #ffffff 50%, #c7c7cc 75%, #666 100%);
+  box-shadow: inset 0 2px 3px rgba(255, 255, 255, 0.8);
+  transition: transform 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: 0;
+}
+
+/* Plunger Cap */
+.plunger-cap {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 18px;
+  width: 44px;
+  border-radius: 4px;
+  background: linear-gradient(to right, #555 0%, #dcdcdc 25%, #ffffff 50%, #aeaeae 75%, #444 100%);
+  box-shadow: 
+    0 4px 6px rgba(0, 0, 0, 0.2),
+    inset 0 1px 1px rgba(255, 255, 255, 0.8),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+  transition: transform 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Plunger cap ridges */
+.plunger-cap::before {
+  content: '';
+  position: absolute;
+  inset: 3px 0;
+  background: repeating-linear-gradient(180deg, #555 0px, #555 1px, transparent 1px, transparent 3px);
+  opacity: 0.25;
+}
+
+/* Click plunger animations */
+.metal-plunger-trigger:active .plunger-shaft,
+.metal-plunger-trigger.pressed .plunger-shaft {
+  transform: translateX(-50%) translateY(8px);
+}
+.metal-plunger-trigger:active .plunger-cap,
+.metal-plunger-trigger.pressed .plunger-cap {
+  transform: translateX(-50%) translateY(8px);
+  box-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.5),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* Crown Plunger (Center) */
+.plunger-trigger-start {
+  width: 80px;
+  height: 50px;
+}
+
+/* Reset Plunger (Right) */
+.plunger-trigger-reset {
+  width: 60px;
+  height: 50px;
+  margin-left: 110px;
+}
+
+.plunger-trigger-reset .plunger-collar {
+  width: 24px;
+  height: 12px;
+}
+.plunger-trigger-reset .plunger-shaft {
+  width: 10px;
+  height: 20px;
+  bottom: 8px;
+}
+.plunger-trigger-reset .plunger-cap {
+  width: 32px;
+  height: 14px;
+  top: -24px;
+}
+
+/* --- MECHANICAL BELL ALARM HAMMER (Silver Chrome) --- */
+.alarm-bell-assembly {
+  position: absolute;
+  top: -65px;
+  left: 60px;
+  width: 60px;
+  height: 70px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.bell-gong {
+  width: 54px;
+  height: 22px;
+  border-radius: 20px 20px 0 0;
+  background: linear-gradient(to right, #888 0%, #eaeaea 25%, #ffffff 50%, #aeaeae 75%, #444 100%);
+  box-shadow: 
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.95),
+    inset 0 -2px 5px rgba(0, 0, 0, 0.3),
+    0 3px 6px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 15px;
+  left: 0;
+}
+
+.bell-stem {
+  width: 8px;
+  height: 20px;
+  background: linear-gradient(to right, #444, #aeaeae, #444);
+  position: absolute;
+  bottom: 12px;
+  left: 23px;
+  z-index: -1;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+}
+
+.bell-striker-pivot {
+  position: absolute;
+  bottom: 8px;
+  right: -25px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #ffffff, #c7c7cc 50%, #555 100%);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
+}
+
+.bell-striker-arm {
+  position: absolute;
+  bottom: 15px;
+  right: -19px;
+  width: 3px;
+  height: 38px;
+  background-color: #aeaeae;
+  box-shadow: inset 1px 0 1px rgba(255, 255, 255, 0.5);
+  transform-origin: bottom center;
+  z-index: -1;
+  transform: rotate(-15deg);
+}
+
+.bell-striker-hammer {
+  position: absolute;
+  top: -8px;
+  left: -6px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffffff, #c7c7cc 50%, #444 100%);
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.8),
+    0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Mechanical strike animations */
+@keyframes hammer-strike {
+  0% { transform: rotate(-15deg); }
+  50% { transform: rotate(-35deg); }
+  100% { transform: rotate(-15deg); }
+}
+
+.alarm-bell-assembly.ringing .bell-striker-arm {
+  animation: hammer-strike 0.05s infinite linear;
+}
+
+@keyframes gong-vibrate {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-0.5px, 0.5px) scale(0.99); }
+  100% { transform: translate(0.5px, -0.5px) scale(1.01); }
+}
+
+.alarm-bell-assembly.ringing .bell-gong {
+  animation: gong-vibrate 0.03s infinite linear;
+}
+
+/* --- THE DIGITAL GLASS LCD SCREEN bezel (White Bezel) --- */
+.vfd-screen-bezel {
+  width: 100%;
+  background: #e3e3e8;
+  border-radius: 20px;
+  padding: 16px;
+  margin-bottom: 25px;
+  box-shadow: 
+    /* Embossed/Debossed bevel well */
+    inset 0 3px 8px rgba(0, 0, 0, 0.25),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.8),
+    0 1px 1px rgba(255, 255, 255, 0.9),
+    0 2px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid #c8c8cc;
+  position: relative;
+}
+
+.vfd-screen-glass {
+  background-color: var(--vfd-bg);
+  border-radius: 12px;
+  height: 90px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 
+    inset 0 4px 10px rgba(0, 0, 0, 0.15),
+    inset 0 1px 3px rgba(0, 0, 0, 0.1),
+    0 1px 1px rgba(255, 255, 255, 0.8);
+  border: 1px solid #c7c7cc;
+}
+
+/* Glass glare highlight overlay */
+.vfd-screen-glass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.5) 0%, 
+    rgba(255, 255, 255, 0.1) 45%, 
+    transparent 45.1%, 
+    rgba(255, 255, 255, 0.15) 100%
+  );
+  border-radius: 10px;
+  pointer-events: none;
+  z-index: 3;
+  transition: transform 0.1s ease-out;
+}
+
+/* Specular glass highlight rim */
+.glass-specular-rim {
+  position: absolute;
+  inset: 0;
+  border-radius: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: inset 0 2px 2px rgba(255, 255, 255, 0.8);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* LCD digital numbers styling (Deep black digits) */
+.vfd-text-container {
+  display: flex;
+  position: relative;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 58px;
+  line-height: 1;
+  letter-spacing: 2px;
+  color: var(--vfd-text);
+  z-index: 1;
+  /* Monochromatic sharp digital shadow */
+  text-shadow: 
+    0 1px 1px rgba(255, 255, 255, 0.9),
+    0 0 1px rgba(0, 0, 0, 0.15);
+  padding: 0 15px;
+}
+
+/* Background outline segment "88:88" (faint gray-blue shadow) */
+.vfd-bg-shadow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 58px;
+  line-height: 1;
+  letter-spacing: 2px;
+  color: var(--vfd-dim);
+  opacity: 0.5; /* more visible in light LCD display */
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 0;
+  padding: 0 15px;
+}
+
+.overtime-indicator {
+  font-size: 26px;
+  align-self: flex-start;
+  margin-top: 4px;
+  margin-right: 4px;
+  width: 18px;
+  display: inline-block;
+  font-weight: bold;
+}
+
+/* --- THE ROTATABLE DIAL UI (Light Brushed Steel) --- */
+.knob-knurled-edge {
+  background: repeating-conic-gradient(
+    #f2f2f7 0deg 1.5deg,
+    #c7c7cc 1.5deg 3deg
+  );
+  box-shadow: 
+    0 8px 16px rgba(0,0,0,0.15),
+    inset 0 3px 5px rgba(255, 255, 255, 0.9),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.08);
+}
+
+.knob-brushed-face {
+  background: conic-gradient(
+    from 15deg,
+    #d1d1d6 0deg,
+    #ffffff 35deg,
+    #c7c7cc 80deg,
+    #ffffff 130deg,
+    #cccccc 180deg,
+    #ffffff 215deg,
+    #d1d1d6 260deg,
+    #ffffff 310deg,
+    #d1d1d6 360deg
+  );
+  box-shadow: 
+    0 4px 6px rgba(0, 0, 0, 0.1),
+    inset 0 1px 2px rgba(255, 255, 255, 0.9);
+}
+
+.knob-inner-well {
+  background: radial-gradient(circle, #ffffff 0%, #e5e5ea 100%);
+  box-shadow: 
+    inset 0 8px 16px rgba(0, 0, 0, 0.12),
+    inset 0 -4px 8px rgba(255, 255, 255, 0.9),
+    0 1px 2px rgba(255, 255, 255, 0.9);
+}
+
+.knob-center-cap {
+  background: conic-gradient(
+    from 45deg,
+    #cccccc 0deg,
+    #ffffff 45deg,
+    #aeaeae 90deg,
+    #ffffff 135deg,
+    #cccccc 180deg,
+    #ffffff 225deg,
+    #aeaeae 270deg,
+    #ffffff 315deg,
+    #cccccc 360deg
+  );
+  box-shadow: 
+    0 3px 6px rgba(0, 0, 0, 0.15),
+    inset 0 1px 1px rgba(255, 255, 255, 0.8);
+  border: 1.5px solid #d1d1d6;
+}
+
+.dial-interactive-section {
+  width: 100%;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* --- PRESETS GRID (White Neumorphic buttons) --- */
+.presets-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.preset-button {
+  background: linear-gradient(to bottom, #ffffff 0%, #f4f4f7 100%);
+  border: 1px solid #d1d1d6;
+  color: #48484a;
+  padding: 8px 4px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 
+    0 2px 4px rgba(0,0,0,0.06),
+    inset 0 1px 0 #ffffff;
+  transition: all 0.1s ease;
+}
+
+.preset-button:hover {
+  color: #1c1c1e;
+  border-color: #aeaeae;
+}
+
+.preset-button:active,
+.preset-button.active {
+  background: linear-gradient(to bottom, #dcdcdc 0%, #eaeaea 100%);
+  border-color: #c7c7cc;
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.15),
+    0 1px 1px rgba(255, 255, 255, 0.8);
+  color: #000000;
+  transform: translateY(1px);
+}
+
+/* --- PREMIUM REDESIGNED CUSTOM INPUT PANEL --- */
+.custom-input-panel {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.custom-input-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #8e8e93;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.custom-input-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Metal Plunger style +/- buttons */
+.metal-btn-round {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid #c7c7cc;
+  background: linear-gradient(to bottom, #ffffff 0%, #eaeaea 100%);
+  color: #2c2c2e;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 #ffffff;
+  transition: all 0.1s ease;
+  user-select: none;
+}
+
+.metal-btn-round:hover {
+  background: linear-gradient(to bottom, #ffffff 0%, #dcdcdc 100%);
+  border-color: #acacac;
+}
+
+.metal-btn-round:active {
+  transform: translateY(1px);
+  background: linear-gradient(to bottom, #dcdcdc 0%, #c7c7cc 100%);
+  box-shadow: 
+    inset 0 2px 3px rgba(0, 0, 0, 0.18),
+    0 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+/* Debossed screen window */
+.debossed-lcd-window {
+  width: 110px;
+  height: 30px;
+  background-color: #ffffff;
+  border: 1.5px solid #d1d1d6;
+  border-radius: 6px;
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.12),
+    0 1px 0 rgba(255, 255, 255, 0.9);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 0 4px;
+}
+
+.lcd-input-field {
+  width: 38px;
+  height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 17px;
+  font-weight: bold;
+  color: #1c1c1e;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.lcd-colon {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 16px;
+  font-weight: bold;
+  color: #1c1c1e;
+  opacity: 0.8;
+  margin: 0 -2px;
+  user-select: none;
+}
+
+/* --- RETRO LEVER TOGGLE SWITCH (Off-white / Silver) --- */
+.toggle-switch-group {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  background: #e3e3e8;
+  border-radius: 16px;
+  padding: 16px 12px;
+  box-shadow: 
+    inset 0 3px 6px rgba(0, 0, 0, 0.25),
+    0 1px 1px rgba(255, 255, 255, 0.8);
+  border: 1px solid #c8c8cc;
+}
+
+.toggle-switch-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  user-select: none;
+}
+
+.toggle-switch-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #777;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.retro-switch-wrapper {
+  position: relative;
+  width: 32px;
+  height: 48px;
+  background: linear-gradient(to bottom, #d1d1d6, #ffffff 30%, #e5e5ea 80%, #c7c7cc 100%);
+  border-radius: 6px;
+  border: 1px solid #c7c7cc;
+  box-shadow: 
+    inset 0 1.5px 3px rgba(0,0,0,0.15),
+    0 1px 1px rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.retro-switch-input {
+  display: none;
+}
+
+/* Metal faceplate collar for switch lever */
+.switch-lever-plate {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffffff 0%, #d1d1d6 80%);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.switch-lever-plate::before {
+  content: '';
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #e5e5ea;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.12);
+}
+
+/* Toggle Lever shaft */
+.switch-lever-handle {
+  width: 6px;
+  height: 26px;
+  background: linear-gradient(to right, #d1d1d6 0%, #ffffff 35%, #e5e5ea 50%, #aeaeae 75%, #888 100%);
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.15),
+    inset 0 1px 1px rgba(255, 255, 255, 0.8);
+  border-radius: 3px 3px 0 0;
+  position: absolute;
+  z-index: 2;
+  transform-origin: center center;
+  transition: transform 0.12s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+/* Top knurled metal ball */
+.switch-lever-handle::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #eaeaea 50%, #999 100%);
+  box-shadow: 
+    0 2px 3px rgba(0, 0, 0, 0.15),
+    inset 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+/* Off (Unchecked) state: lever tilted down/forward */
+.retro-switch-wrapper .switch-lever-handle {
+  transform: rotateX(25deg) translateY(4px);
+}
+
+/* On (Checked) state: lever tilted up/back */
+.retro-switch-input:checked ~ .switch-lever-handle {
+  transform: rotateX(-25deg) translateY(-4px);
+}
+
+/* --- MONOCHROMATIC VISUAL WARNING STATES (Light Theme) --- */
+
+/* Idle Breathing Glow (Subtle opacity breathing) */
+@keyframes vfd-breathing {
+  0% { opacity: 0.85; }
+  50% { opacity: 1.0; }
+  100% { opacity: 0.85; }
+}
+.deck-timer-casing.idle .vfd-text-container {
+  animation: vfd-breathing 3s infinite ease-in-out;
+}
+
+/* 2 Minutes Warning: Breathing Light Glow Pulse */
+@keyframes warning-breathing {
+  0% { opacity: 0.7; background-color: #f0f3f6; }
+  50% { opacity: 1.0; background-color: #ffffff; }
+  100% { opacity: 0.7; background-color: #f0f3f6; }
+}
+.deck-timer-casing.warning .vfd-screen-glass {
+  animation: warning-breathing 1.5s infinite ease-in-out;
+}
+
+/* 30 Seconds Urgent Warning: Rapid Inversion Strobe */
+@keyframes chassis-shake {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(-0.5px, 0.5px) rotate(-0.1deg); }
+  50% { transform: translate(0.5px, -0.5px) rotate(0.1deg); }
+  75% { transform: translate(-0.5px, -0.5px) rotate(0deg); }
+  100% { transform: translate(0.5px, 0.5px) rotate(-0.1deg); }
+}
+.deck-timer-casing.urgent {
+  animation: chassis-shake 0.15s infinite linear;
+}
+
+@keyframes urgent-strobe {
+  0%, 49% {
+    background-color: var(--vfd-bg);
+    color: var(--vfd-text);
+  }
+  50%, 100% {
+    background-color: #1c1c1e;
+    color: #f8f9fc;
+  }
+}
+.deck-timer-casing.urgent .vfd-screen-glass {
+  animation: urgent-strobe 0.5s infinite steps(2);
+}
+
+.deck-timer-casing.urgent .vfd-text-container {
+  color: inherit;
+  text-shadow: none;
+}
+
+/* Overtime State: Solid Inversion (pitch-black VFD screen with white text) */
+.deck-timer-casing.overtime .vfd-screen-glass {
+  background-color: #121214;
+  color: #ffffff;
+  box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.9);
+  border-color: #000;
+}
+
+.deck-timer-casing.overtime .vfd-text-container {
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  font-weight: 700;
+}
+
+.deck-timer-casing.overtime {
+  animation: chassis-shake 0.15s infinite linear;
+}
+
+/* --- FULLSCREEN STAGE PRESENTATION MODE (White/Light Screen) --- */
+.stage-mode-btn {
+  margin-top: 25px;
+  background: linear-gradient(to bottom, #ffffff 0%, #eaeaea 100%);
+  border: 1px solid #d1d1d6;
+  color: #48484a;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.1s ease;
+}
+
+.stage-mode-btn:hover {
+  color: #1c1c1e;
+  border-color: #acacac;
+}
+
+.stage-mode-btn:active {
+  transform: translateY(1.5px);
+  box-shadow: 
+    0 1px 2px rgba(0,0,0,0.15),
+    inset 0 1px 2px rgba(0,0,0,0.12);
+}
+
+.fullscreen-stage-mode {
+  background-color: #f4f4f7 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.fullscreen-stage-mode .deck-timer-casing {
+  transform: none !important; /* Disable scale transform to avoid clipping */
+  width: 95vw;
+  height: 95vh;
+  max-width: 650px;
+  max-height: 90vh;
+  padding: 30px;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+  background-color: #ffffff;
+  border-color: #e5e5ea;
+}
+
+/* Hide non-essential controls during fullscreen stage presentation to save vertical space */
+.fullscreen-stage-mode .presets-grid,
+.fullscreen-stage-mode .custom-input-panel,
+.fullscreen-stage-mode .toggle-switch-group,
+.fullscreen-stage-mode .stage-mode-btn,
+.fullscreen-stage-mode .casing-screw {
+  display: none !important;
+}
+
+/* Make VFD screen much larger in Stage Mode */
+.fullscreen-stage-mode .vfd-screen-bezel {
+  margin-bottom: 15px;
+  padding: 8px;
+}
+
+.fullscreen-stage-mode .vfd-screen-glass {
+  height: 140px; /* Make VFD display taller */
+}
+
+.fullscreen-stage-mode .vfd-text-container {
+  font-size: 90px; /* Double digit size for high glanceability */
+  letter-spacing: 4px;
+}
+
+.fullscreen-stage-mode .vfd-bg-shadow {
+  font-size: 90px;
+  letter-spacing: 4px;
+}
+
+.fullscreen-stage-mode .overtime-indicator {
+  font-size: 40px;
+}
+
+/* Scale dial slightly to fit */
+.fullscreen-stage-mode .dial-interactive-section {
+  margin-bottom: 0;
+  transform: scale(0.95);
+}
+
+.fullscreen-stage-mode .dial-container svg {
+  transform: scale(0.9);
+}
+
+.fullscreen-stage-mode .dial-knob {
+  width: 190px !important;
+  height: 190px !important;
+}
+
+/* --- DUST/GRAIN NOISE FILTER --- */
+.noise-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+}
+
+/* Accessibility settings for keyboard focus rings */
+button:focus-visible,
+div[role="slider"]:focus-visible,
+input:focus-visible {
+  outline: 2px solid #888;
+  outline-offset: 4px;
+}
+
+/* Parallax shift transitions */
+.glass-shift {
+  transition: transform 0.1s ease-out;
+}
