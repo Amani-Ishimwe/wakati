@@ -1,8 +1,8 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 interface KnobDialProps {
   value: number; // current time left in seconds
-  status: 'idle' | 'running' | 'paused' | 'warning' | 'urgent' | 'overtime';
+  status: string; // timer status
   onChange: (newValue: number) => void;
   onPlayClickSound: () => void;
 }
@@ -17,18 +17,20 @@ export const KnobDial: React.FC<KnobDialProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const prevStepRef = useRef<number>(Math.round(value / 60));
 
-  // Determine current display angle based on value
   // A full 360 degrees (2*PI) corresponds to 60 minutes (3600 seconds)
-  // Clamp value to 0-3600 seconds
-  const displaySeconds = Math.max(0, Math.min(3600, value));
-  const currentAngleRad = (displaySeconds / 3600) * 2 * Math.PI;
+  const displaySeconds = Math.max(0, value);
+  
+  // Minute hand angle (0 to 60 minutes)
+  const minutesSecondsRemainder = displaySeconds % 3600;
+  const currentAngleRad = (minutesSecondsRemainder / 3600) * 2 * Math.PI;
+  
+  // Hour hand angle (12 hours = 43200 seconds)
+  const hourAngleRad = (displaySeconds / 43200) * 2 * Math.PI;
+
+  // Sweep second hand angle
+  const secondAngleRad = ((displaySeconds % 60) / 60) * 2 * Math.PI;
 
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (status === 'running' || status === 'warning' || status === 'urgent' || status === 'overtime') {
-      // If timer is active, dragging the dial pauses it first to allow adjustment
-      // We'll let the App component handle the status state, but we allow drag interaction.
-    }
-    
     if (dialRef.current) {
       dialRef.current.setPointerCapture(e.pointerId);
       setIsDragging(true);
@@ -60,7 +62,6 @@ export const KnobDial: React.FC<KnobDialProps> = ({
     const dx = clientX - cx;
     const dy = clientY - cy;
 
-    // Calculate angle: standard atan2 has 3 o'clock as 0. 
     // We want 12 o'clock to be 0 and increase clockwise.
     let angle = Math.atan2(dy, dx) + Math.PI / 2;
     if (angle < 0) {
@@ -80,27 +81,36 @@ export const KnobDial: React.FC<KnobDialProps> = ({
       onPlayClickSound();
     }
 
-    onChange(snappedSeconds === 0 ? 60 : snappedSeconds); // If user drags to exactly 0, default to 60 or let them go down to 1
+    // Support adjusting minutes while preserving the current hours portion
+    const currentHours = Math.floor(value / 3600);
+    const minutesPortionSeconds = snappedSeconds % 3600;
+    let nextTotalSeconds = currentHours * 3600 + minutesPortionSeconds;
+    
+    if (nextTotalSeconds === 0) {
+      nextTotalSeconds = 60; // default to 1 min if everything is zero
+    }
+    
+    onChange(nextTotalSeconds);
   };
 
-  // Generate SVG tick marks for the perimeter of the dial
+  // Generate SVG tick marks for the perimeter of the dial (fixed face)
   const renderTicks = () => {
     const ticks = [];
-    // 60 tick marks for 60 minutes
+    const radius = 110; // outer edge of dial (relative to 240x240 size)
+    
     for (let i = 0; i < 60; i++) {
       const angleDeg = i * 6;
       const isMajor = i % 5 === 0;
       const isQuarter = i % 15 === 0;
       
-      const strokeWidth = isQuarter ? 2.5 : isMajor ? 1.5 : 0.8;
-      const length = isQuarter ? 14 : isMajor ? 10 : 6;
-      const radius = 135; // tick starting radius
+      const strokeWidth = isQuarter ? 2.2 : isMajor ? 1.5 : 0.7;
+      const length = isQuarter ? 12 : isMajor ? 8 : 4;
 
       const angleRad = (angleDeg * Math.PI) / 180;
-      const x1 = 150 + radius * Math.sin(angleRad);
-      const y1 = 150 - radius * Math.cos(angleRad);
-      const x2 = 150 + (radius - length) * Math.sin(angleRad);
-      const y2 = 150 - (radius - length) * Math.cos(angleRad);
+      const x1 = 120 + radius * Math.sin(angleRad);
+      const y1 = 120 - radius * Math.cos(angleRad);
+      const x2 = 120 + (radius - length) * Math.sin(angleRad);
+      const y2 = 120 - (radius - length) * Math.cos(angleRad);
 
       ticks.push(
         <line
@@ -109,7 +119,7 @@ export const KnobDial: React.FC<KnobDialProps> = ({
           y1={y1}
           x2={x2}
           y2={y2}
-          stroke="#444"
+          stroke="#3a3a3c"
           strokeWidth={strokeWidth}
           opacity={isQuarter ? 0.9 : isMajor ? 0.7 : 0.4}
         />
@@ -117,26 +127,44 @@ export const KnobDial: React.FC<KnobDialProps> = ({
 
       // Add numeric markers for major numbers (5, 10, 15... 60)
       if (isMajor && i > 0) {
-        const textRadius = radius - length - 12;
-        const tx = 150 + textRadius * Math.sin(angleRad);
-        const ty = 150 - textRadius * Math.cos(angleRad);
+        const textRadius = radius - length - 11;
+        const tx = 120 + textRadius * Math.sin(angleRad);
+        const ty = 120 - textRadius * Math.cos(angleRad);
         ticks.push(
           <text
             key={`text-${i}`}
             x={tx}
             y={ty + 4} // Center offset correction
-            fill="#333"
+            fill="#3a3a3c"
             fontSize="10px"
+            fontWeight="600"
             fontFamily="Inter, sans-serif"
-            fontWeight="bold"
             textAnchor="middle"
-            opacity="0.8"
+            className="select-none"
           >
             {i}
           </text>
         );
       }
     }
+
+    // Add visual '60' or indicator tick at the 12 o'clock mark
+    ticks.push(
+      <text
+        key="text-60"
+        x="120"
+        y="21"
+        fill="#1c1c1e"
+        fontSize="11px"
+        fontWeight="800"
+        fontFamily="Inter, sans-serif"
+        textAnchor="middle"
+        className="select-none"
+      >
+        60
+      </text>
+    );
+
     return ticks;
   };
 
@@ -157,55 +185,56 @@ export const KnobDial: React.FC<KnobDialProps> = ({
 
   return (
     <div className="dial-container flex flex-col items-center justify-center relative select-none">
-      {/* Outer Dial Graduation Ring */}
-      <svg 
-        width="300" 
-        height="300" 
-        className="absolute pointer-events-none select-none"
-        aria-hidden="true"
-      >
-        {renderTicks()}
-        {/* Dial border highlight rings */}
-        <circle cx="150" cy="150" r="142" stroke="#222" strokeWidth="1" fill="none" opacity="0.1" />
-        <circle cx="150" cy="150" r="138" stroke="#fff" strokeWidth="1" fill="none" opacity="0.3" />
-      </svg>
-
-      {/* Main Rotatable Physical Dial */}
-      <div
+      {/* Outer Dial Graduation Ring & Stationary Face */}
+      <div 
         ref={dialRef}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
-        className={`dial-knob rounded-full cursor-grab active:cursor-grabbing relative flex items-center justify-center`}
+        className="dial-stationary-face relative flex items-center justify-center cursor-grab active:cursor-grabbing rounded-full"
         style={{
-          width: '210px',
-          height: '210px',
-          transform: `rotate(${currentAngleRad}rad)`,
+          width: '240px',
+          height: '240px',
+          background: 'radial-gradient(circle, #ffffff 60%, #f4f4f7 100%)',
+          border: '1.5px solid #d1d1d6',
+          boxShadow: 'inset 0 2px 5px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.05)',
           touchAction: 'none',
-          transition: isDragging ? 'none' : 'transform 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
         }}
-        aria-label="Timer setting dial. Drag to change timer duration."
         role="slider"
-        aria-valuemin={60}
-        aria-valuemax={3600}
+        aria-valuemin={10}
+        aria-valuemax={359999}
         aria-valuenow={value}
+        aria-label="Stopwatch dial face. Drag anywhere on the face to set minutes."
       >
-        {/* Knurled Grip Edge Overlay */}
-        <div className="absolute inset-0 rounded-full knob-knurled-edge"></div>
+        <svg 
+          width="240" 
+          height="240" 
+          className="absolute inset-0 pointer-events-none select-none z-[1]"
+          aria-hidden="true"
+        >
+          {renderTicks()}
 
-        {/* Brushed Radial Metal Center face */}
-        <div className="absolute inset-1 rounded-full knob-brushed-face flex items-center justify-center">
-          {/* Inner debossed well */}
-          <div className="w-[85%] h-[85%] rounded-full knob-inner-well flex items-center justify-center">
-            {/* Physical indicator notch pointing to value */}
-            <div className="absolute top-[8px] w-2.5 h-6 bg-black rounded-b-sm border-t border-white/20 shadow-inner"></div>
-            
-            {/* Center steel logo cap */}
-            <div className="w-12 h-12 rounded-full knob-center-cap flex items-center justify-center">
-              <div className="w-6 h-6 rounded-full bg-black/10 shadow-inner"></div>
-            </div>
-          </div>
-        </div>
+          {/* Hour Hand (slow, short) */}
+          <g style={{ transform: `rotate(${hourAngleRad}rad)`, transformOrigin: '120px 120px' }}>
+            <line x1="120" y1="120" x2="120" y2="78" stroke="#1c1c1e" strokeWidth="4.5" strokeLinecap="round" />
+          </g>
+
+          {/* Minute Hand (long, thin, representing minutes) */}
+          <g style={{ transform: `rotate(${currentAngleRad}rad)`, transformOrigin: '120px 120px' }}>
+            <line x1="120" y1="120" x2="120" y2="35" stroke="#2c2c2e" strokeWidth="2.5" strokeLinecap="round" />
+            <circle cx="120" cy="35" r="3.5" fill="#2c2c2e" />
+          </g>
+
+          {/* Sweep Second Hand (ticking) */}
+          <g style={{ transform: `rotate(${secondAngleRad}rad)`, transformOrigin: '120px 120px' }}>
+            <line x1="120" y1="135" x2="120" y2="25" stroke="#7a7a7c" strokeWidth="1" strokeLinecap="round" />
+            <circle cx="120" cy="135" r="3" fill="#7a7a7c" />
+          </g>
+
+          {/* Center silver pin cap */}
+          <circle cx="120" cy="120" r="5" fill="#e5e5ea" stroke="#8e8e93" strokeWidth="1" />
+          <circle cx="120" cy="120" r="1.5" fill="#3a3a3c" />
+        </svg>
       </div>
     </div>
   );
