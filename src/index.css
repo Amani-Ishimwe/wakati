@@ -1098,3 +1098,170 @@ input:focus-visible {
 .glass-shift {
   transition: transform 0.1s ease-out;
 }
+
+/* --- RESPONSIVE MEDIA QUERIES (Mobile & Tablet Support) --- */
+@media (max-width: 620px) {
+  #root {
+    padding: 10px;
+  }
+
+  .deck-timer-casing {
+    max-width: 95vw;
+    padding: 35px 16px 20px 16px;
+    border-radius: 28px;
+  }
+
+  .deck-timer-casing::after {
+    border-radius: 24px;
+  }
+
+  .timer-plungers-container {
+    left: 12px;
+    right: 12px;
+  }
+
+  .plunger-label {
+    font-size: 7px;
+  }
+
+  .plunger-label-left {
+    left: 18px;
+  }
+
+  .plunger-label-right {
+    right: 22px;
+  }
+
+  /* Stack columns vertically on small screens */
+  .casing-grid-container {
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 5px;
+  }
+
+  .casing-left-column {
+    width: 190px; /* scale down the dial */
+  }
+
+  .casing-right-column {
+    width: 100%;
+  }
+
+  /* Make VFD digits fit on mobile screen width */
+  .vfd-text-container,
+  .vfd-bg-shadow {
+    font-size: 38px;
+    letter-spacing: 1px;
+  }
+
+  .vfd-screen-bezel {
+    padding: 8px;
+    margin-bottom: 6px;
+  }
+
+  .vfd-screen-glass {
+    height: 58px;
+  }
+
+  .presets-grid {
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .preset-button {
+    font-size: 10px;
+    padding: 6px 2px;
+  }
+
+  .custom-input-panel {
+    margin-bottom: 8px;
+  }
+
+  .custom-input-label {
+    font-size: 8px;
+    margin-bottom: 4px;
+  }
+
+  .debossed-lcd-window {
+    width: 135px;
+    height: 28px;
+  }
+
+  .lcd-input-field {
+    width: 27px;
+    font-size: 15px;
+  }
+
+  .lcd-colon {
+    font-size: 14px;
+  }
+
+  .small-square-watch {
+    width: 28px;
+    height: 28px;
+    margin-right: 6px;
+  }
+
+  .small-square-watch svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .toggle-switch-group {
+    padding: 8px;
+    border-radius: 12px;
+  }
+
+  .toggle-switch-item {
+    font-size: 9px;
+  }
+
+  /* Stage Mode responsive layout overrides on Mobile */
+  .fullscreen-stage-mode .deck-timer-casing {
+    flex-direction: column !important;
+    max-width: 95vw;
+    height: auto;
+    max-height: 92vh;
+    padding: 24px 16px;
+    gap: 16px;
+  }
+
+  .fullscreen-stage-mode .casing-left-column {
+    width: 200px;
+  }
+
+  .fullscreen-stage-mode .vfd-text-container,
+  .fullscreen-stage-mode .vfd-bg-shadow {
+    font-size: 42px;
+    letter-spacing: 1.5px;
+  }
+
+  .fullscreen-stage-mode .vfd-screen-glass {
+    height: 64px;
+  }
+
+  .fullscreen-stage-mode .panel-controls-row {
+    margin-top: 8px;
+  }
+
+  .fullscreen-stage-mode .panel-btn-tactile {
+    height: 42px;
+    font-size: 13px;
+    border-radius: 6px;
+  }
+}
+
+/* Also support extra small devices (e.g. iPhone SE) */
+@media (max-width: 360px) {
+  .casing-left-column {
+    width: 170px;
+  }
+  
+  .timer-plungers-container {
+    display: none !important; /* Hide plungers on tiny viewports to avoid overlapping */
+  }
+
+  .plunger-label {
+    display: none !important;
+  }
+}

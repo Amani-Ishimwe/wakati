@@ -207,9 +207,8 @@ export const KnobDial: React.FC<KnobDialProps> = ({
         aria-label="Stopwatch dial face. Drag anywhere on the face to set minutes."
       >
         <svg 
-          width="240" 
-          height="240" 
-          className="absolute inset-0 pointer-events-none select-none z-[1]"
+          viewBox="0 0 240 240"
+          className="absolute inset-0 pointer-events-none select-none z-[1] w-full h-full"
           aria-hidden="true"
         >
           {renderTicks()}
